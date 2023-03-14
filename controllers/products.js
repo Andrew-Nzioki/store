@@ -10,16 +10,18 @@ const getAllProductsStatic = async (req, res) => {
 const getAllProducts = async (req, res) => {
   const { featured, company, name, sort, fields, numericFilters } = req.query;
   const queryObject = {};
-
+//return products based of if they are featured or not
   if (featured) {
     queryObject.featured = featured === 'true' ? true : false;
   }
+  //return products based of a certain company condition
   if (company) {
     queryObject.company = company;
   }
   if (name) {
     queryObject.name = { $regex: name, $options: 'i' };
   }
+  //the numeric fileter filters products based on price // the operators used are mongo db friendly
   if (numericFilters) {
     const operatorMap = {
       '>': '$gt',
@@ -28,6 +30,7 @@ const getAllProducts = async (req, res) => {
       '<': '$lt',
       '<=': '$lte',
     };
+    //a regex function for the return
     const regEx = /\b(<|>|>=|=|<|<=)\b/g;
     let filters = numericFilters.replace(
       regEx,
